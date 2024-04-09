@@ -1,85 +1,179 @@
-from PySide6.QtWidgets import QMainWindow, QApplication, QGraphicsRotation
-from PySide6.QtGui import QPixmap, QTransform
-import sys, os, time
-from photo import Ui_MainWindow
-from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMainWindow, QLabel, QPushButton, QLineEdit, QVBoxLayout, QApplication, QWidget, QDialog, QHBoxLayout
+from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
+import sys, os
 
 
-
-# 1
-class MainWindow(QMainWindow):
+class HelloWindow(QMainWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.setWindowTitle('My App')
-        self.images = os.listdir('IMAGES')
-        self.now = 0
-        self.rotation = 0
+        super(HelloWindow, self).__init__()
+        self.initUI()
+    def initUI(self):
+        self.setWindowTitle('Hello window')
 
-        self.image = self.ui.image
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-        self.image.setPixmap(self.pixmap)
+        font = QFont(os.path.join('font', 'Droid Sans Mono.ttf'), 30)
+        self.setFont(font)
 
-        self.ui.right.clicked.connect(self.right)
-        self.ui.left.clicked.connect(self.left)
-        self.ui.last.clicked.connect(self.last)
-        self.ui.first.clicked.connect(self.first)
-        self.ui.timesleep.clicked.connect(self.timesleep)
-        self.ui.delete_2.clicked.connect(self.delete_2)
-        self.ui.right1.clicked.connect(self.right1)
-        self.ui.left1.clicked.connect(self.left1)
+        central_widget = QWidget()
+        layout = QVBoxLayout()
+
+        label = QLabel('Hello')
+        label.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignHCenter)
+
+        button = QPushButton('Register')
+        font = QFont(os.path.join('font', 'Droid Sans Mono.ttf'), 10)
+        button.setFont(font)
+        button.clicked.connect(self.reg)
+
+        layout.addWidget(label)
+        layout.addWidget(button)
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+    def reg(self):
+        e2.show()
+        self.close()
 
 
-    def right(self):
-        self.now = min(self.now + 1, len(self.images) - 1)
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-        self.image.setPixmap(self.pixmap)
-    def left(self):
-        self.now = max(self.now - 1, 0)
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-        self.image.setPixmap(self.pixmap)
+class RegisterWindow (QMainWindow):
+    def __init__(self):
+        super(RegisterWindow, self).__init__()
+        self.setWindowTitle('Register window')
 
-    def last(self):
-        self.now = len(self.images) - 1
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-        self.image.setPixmap(self.pixmap)
-    def first(self):
-        self.now = 0
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-        self.image.setPixmap(self.pixmap)
+        font = QFont(os.path.join('font', 'Droid Sans Mono.ttf'), 10)
+        self.setFont(font)
 
-    def timesleep(self):
+        central_widget = QWidget()
+        layout = QVBoxLayout()
 
-        self.pixmap = QPixmap(os.path.join('IMAGES', self.images[i]))
-        self.image.setPixmap(self.pixmap)
+        layout1 = QHBoxLayout()
 
-    def right1(self):
-        pixmap = QPixmap(self.images[self.now])
-        self.rotation += 1
-        transform = QTransform().rotate(self.rotation)
-        pixmap = pixmap.transformed(transform)
-        self.image.setPixmap(pixmap)
-    def left1(self):
-        pixmap = QPixmap(self.images[self.now])
-        self.rotation -= 1
-        transform = QTransform().rotate(self.rotation)
-        pixmap = pixmap.transformed(transform)
-        self.image.setPixmap(pixmap)
+        login0 = QLabel('Ваш логин')
 
-    def delete_2(self):
-        if self.now == 0 and len(self.images) > 1:
-            self.now += 1
-            self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-            self.image.setPixmap(self.pixmap)
-            self.images.pop(self.now - 1)
-        elif len(self.images) > 1:
-            self.now -= 1
-            self.pixmap = QPixmap(os.path.join('IMAGES', self.images[self.now]))
-            self.image.setPixmap(self.pixmap)
-            self.images.pop(self.now + 1)
+        self.login = QLineEdit()
+        self.login.setPlaceholderText('Введите логин')
 
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
+        self.login_text = QLabel()
+
+        layout.addWidget(login0)
+        layout1.addWidget(self.login)
+        layout1.addWidget(self.login_text)
+
+        layout.addLayout(layout1)
+
+        layout2 = QHBoxLayout()
+
+        password0 = QLabel('Ваш пароль')
+
+        self.password = QLineEdit()
+        self.password.setPlaceholderText('Введите пароль')
+
+        self.password_text = QLabel()
+
+        layout.addWidget(password0)
+        layout2.addWidget(self.password)
+        layout2.addWidget(self.password_text)
+
+        layout.addLayout(layout2)
+
+        layout3 = QHBoxLayout()
+
+        self.repeat_password = QLineEdit()
+        self.repeat_password.setPlaceholderText('Введите пароль повторно')
+
+        self.repeat_password_text = QLabel()
+
+        layout3.addWidget(self.repeat_password)
+        layout3.addWidget(self.repeat_password_text)
+
+        layout.addLayout(layout3)
+
+        layout4 = QHBoxLayout()
+
+        email0 = QLabel('Ваша электронная почта')
+
+        self.email = QLineEdit()
+        self.email.setPlaceholderText('Введите электронную почту')
+
+        self.email_text = QLabel()
+
+        layout.addWidget(email0)
+        layout4.addWidget(self.email)
+        layout4.addWidget(self.email_text)
+
+        layout.addLayout(layout4)
+
+        layout5 = QHBoxLayout()
+
+        num0 = QLabel('Ваш номер телефона')
+
+        self.num = QLineEdit()
+        self.num.setPlaceholderText('Введите номер телефона')
+
+        self.num_text = QLabel()
+
+        layout.addWidget(num0)
+        layout5.addWidget(self.num)
+        layout5.addWidget(self.num_text)
+
+        layout.addLayout(layout5)
+
+        layout6 = QHBoxLayout()
+
+        name0 = QLabel('Ваш ФИО')
+
+        self.name = QLineEdit()
+
+        layout6.addWidget(name0)
+        layout6.addWidget(self.name)
+
+        layout.addLayout(layout6)
+
+        layout7 = QHBoxLayout()
+
+        city0 = QLabel('Ваш город')
+
+        self.city = QLineEdit()
+
+        layout7.addWidget(city0)
+        layout7.addWidget(self.city)
+
+        layout.addLayout(layout7)
+
+        layout8 = QHBoxLayout()
+
+        about0 = QLabel('О себе')
+
+        self.about = QLineEdit()
+        self.about.setPlaceholderText('')
+
+        layout8.addWidget(about0)
+        layout8.addWidget(self.about)
+
+        layout.addLayout(layout8)
+
+        central_widget.setLayout(layout)
+
+        self.button = QPushButton('Отправить')
+        layout.addWidget(self.button)
+
+        self.setCentralWidget(central_widget)
+
+        self.login.returnPressed.connect(self.log_text)
+        # self.password.textEdited.connect()
+        # self.repeat_password.textEdited.connect()
+        # self.email.textEdited.connect()
+        # self.num.textEdited.connect()
+        # self.name.textEdited.connect()
+        # self.city.textEdited.connect()
+        # self.about.textEdited.connect()
+
+    def log_text(self):
+        print(self.login.text())
+
+
+app = QApplication([])
+e1 = HelloWindow()
+e2 = RegisterWindow()
+e1.show()
 app.exec()
